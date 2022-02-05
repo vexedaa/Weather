@@ -1,0 +1,33 @@
+{
+  "name": "Weather",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$path": "src/ReplicatedStorage",
+      "$className": "ReplicatedStorage",
+      "$ignoreUnknownInstances": true
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$path": "src/ServerScriptService",
+      "$ignoreUnknownInstances": true
+    },
+
+    "StarterPlayer": {
+      "$path": "src/StarterPlayer",
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayer/StarterPlayerScripts",
+        "$className": "StarterPlayerScripts",
+        "$ignoreUnknownInstances": true
+      },
+      "StarterCharacterScripts": {
+        "$path": "src/StarterPlayer/StarterCharacterScripts",
+        "$className": "StarterCharacterScripts",
+        "$ignoreUnknownInstances": true
+      }
+    }
+  }
+}
