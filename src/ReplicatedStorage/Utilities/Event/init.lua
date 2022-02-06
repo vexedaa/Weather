@@ -2,9 +2,8 @@ local RunService = game:GetService("RunService")
 local Connection = require(script:WaitForChild("Connection"))
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Modules = ReplicatedStorage:WaitForChild("Modules")
-local Library = require(Modules:WaitForChild("Library"))
-local Unpack = require(Modules:WaitForChild("Unpack"))
+local Utilities = ReplicatedStorage:WaitForChild("Utilities")
+local Unpack = require(Utilities:WaitForChild("Unpack"))
 
 local Event = {}
 Event.__index = Event
@@ -59,7 +58,7 @@ function Event:Wait(timeout, default)
 	assert(typeof(timeout) == "number", "Timeout (number) required for wait time.")
 	local current_thread = coroutine.running()
 	self.Waiting[current_thread] = true
-	Library.Timer(timeout)
+	task.wait(timeout)
 	self.Waiting[current_thread] = nil
 	coroutine.resume(current_thread, default)
 end

@@ -9,13 +9,11 @@ function GenericWeatherPreset.new()
             Ambient = Color3.fromRGB(70, 70, 70);
             Brightness = 3;
             ColorShift_Bottom = Color3.fromRGB(0, 0, 0);
-            Colorshift_Top = Color3.fromRGB(0, 0, 0);
+            ColorShift_Top = Color3.fromRGB(0, 0, 0);
             EnvironmentDiffuseScale = 1;
             EnvironmentSpecularScale = 1;
-            GlobalShadows = true;
             OutdoorAmbient = Color3.fromRGB(70, 70, 70);
             ShadowSoftness = 0.2;
-            Technology = Enum.Technology.ShadowMap;
             ClockTime = 14.5;
             GeographicLatitude = 0;
             ExposureCompensation = 0;
@@ -25,7 +23,7 @@ function GenericWeatherPreset.new()
     self._WeatherGlobals = {
         _Clouds = {
             Parent = workspace.Terrain;
-            
+            ClassName = "Clouds";
             Cover = 0.5;
             Density = 0.7;
             Color = Color3.fromRGB(255, 255, 255)
@@ -33,7 +31,7 @@ function GenericWeatherPreset.new()
 
         _Atmosphere = {
             Parent = game:GetService("Lighting");
-
+            ClassName = "Atmosphere";
             Density = 0.3;
             Offset = 0.25;
             Color = Color3.fromRGB(199, 199, 199);
@@ -71,13 +69,16 @@ end
 
 function GenericWeatherPreset:_Initialize()
     --Intentionally left blank for now
-    for _, presetDependency in pairs(self._Dependencies) do
-        local success, result = pcall(function()
-            local activePresetDependency = require(presetDependency).new()
-            table.insert(self._ActivePresets, activePresetDependency)
-        end)
-        if success == false then
-            warn("Failed to load sub-preset", result)
+    print(self)
+    if self and self._PresetDependencies then
+        for _, presetDependency in pairs(self._PresetDependencies) do
+            local success, result = pcall(function()
+                local activePresetDependency = require(presetDependency).new()
+                table.insert(self._ActivePresets, activePresetDependency)
+            end)
+            if success == false then
+                warn("Failed to load sub-preset", result)
+            end
         end
     end
 end
