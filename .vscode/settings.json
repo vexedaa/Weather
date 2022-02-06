@@ -1,0 +1,11 @@
+{
+    "robloxLsp.diagnostics.disable": [
+        "empty-block",
+        "empty-block",
+        "empty-block"
+        
+    ],
+    "robloxLsp.completion.callParenthesess": true,
+      "robloxLsp.completion.deprecatedMembers": true,
+      "robloxLsp.completion.endAutocompletion": true,
+}

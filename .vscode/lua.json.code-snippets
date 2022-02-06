@@ -1,0 +1,38 @@
+{
+	"New Class": {
+		"prefix": ["newclass"],
+		"body": [
+			"local ${TM_FILENAME/(.*)\\..+$/$1/} = {}",
+			"${TM_FILENAME/(.*)\\..+$/$1/}.__index = ${TM_FILENAME/(.*)\\..+$/$1/}",
+			"",
+			"function ${TM_FILENAME/(.*)\\..+$/$1/}.new(args)",
+			"\tlocal self = {}",
+			"\tsetmetatable(self, ${TM_FILENAME/(.*)\\..+$/$1/})",
+			"",
+			"\treturn self",
+			"end",
+			"",
+			"return ${TM_FILENAME/(.*)\\..+$/$1/}",
+		],
+		"description": "Quickly create a new class.",
+	},
+
+	"New Singleton": {
+		"prefix": ["newsingleton"],
+		"body": [
+			"local ${TM_FILENAME/(.*)\\..+$/$1/} = {}",
+			"${TM_FILENAME/(.*)\\..+$/$1/}.__index = ${TM_FILENAME/(.*)\\..+$/$1/}",
+			"",
+			"function ${TM_FILENAME/(.*)\\..+$/$1/}.new()",
+			"\tlocal self = {}",
+			"\tsetmetatable(self, ${TM_FILENAME/(.*)\\..+$/$1/})",
+			"",
+			"\treturn self",
+			"end",
+			"",
+			"local Singleton = ${TM_FILENAME/(.*)\\..+$/$1/}.new()",
+			"return Singleton",
+		],
+		"description": "Quickly create a new singleton.",
+	},
+}
