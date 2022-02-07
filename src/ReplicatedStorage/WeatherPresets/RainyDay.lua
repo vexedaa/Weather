@@ -63,4 +63,10 @@ function RainyDay.new()
     return self
 end
 
+function RainyDay:_Initialize()
+    GenericWeatherPreset._Initialize(self)
+    local grid = self.AtmosphericParticleGrid.new(1, 60, 1, 90, self.ParticleLayers.RainParticles)
+    table.insert(self._ActiveParticleGrids, grid)
+end
+
 return RainyDay

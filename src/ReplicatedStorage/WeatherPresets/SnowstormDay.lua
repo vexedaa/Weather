@@ -56,7 +56,11 @@ function SnowstormDay.new()
     };
 
     self._Sounds = {
-        
+        ["Snow"] = {
+            Volume = 0.2;
+            Looped = true;
+            SoundId = "rbxassetid://6670282148";
+        }
     };
 
     --Presets can include other presets
@@ -70,7 +74,7 @@ end
 
 function SnowstormDay:_Initialize()
     GenericWeatherPreset._Initialize(self)
-    local grid = self.AtmosphericParticleGrid.new(9, 15, 1, 50, self.ParticleLayers.DefaultParticleLayers)
+    local grid = self.AtmosphericParticleGrid.new(12, 11, 1, 75, self.ParticleLayers.SnowParticles)
     table.insert(self._ActiveParticleGrids, grid)
 end
 

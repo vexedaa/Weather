@@ -31,7 +31,7 @@ end
 
 function AtmosphericParticleGrid:Run()
     self._Running = true
-    self._Grid.Parent = workspace
+    self._Grid.Parent = camera
     game:GetService("RunService").RenderStepped:Connect(function()
         if self._Grid == nil or self.Running == false then
             return
