@@ -1,5 +1,6 @@
-# Weather
-test
+# Weather 1.0
+(View source blob for Apache License 2.0 information and API reference)
+
  
    <!-- Copyright 2022 Vexture
 
