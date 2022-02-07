@@ -32,10 +32,10 @@ function ArrowButton:_Initialize()
     button.MouseButton1Click:Connect(function()
         if direction == "Left" then
             --Place target container to the left of button's container
-            target.Position = UDim2.new(-target.Size.X.Scale * 2, 0, 0.5, 0)
+            target.Position = UDim2.new(-2, 0, 0.5, 0)
             target.Visible = true
             --Tween container to the right, and target to the center
-            local containerTween = TweenService:Create(container, self._TweenInfo, {Position = UDim2.new(1.5, 0, .5, 0)})
+            local containerTween = TweenService:Create(container, self._TweenInfo, {Position = UDim2.new(2, 0, .5, 0)})
             local targetTween = TweenService:Create(target, self._TweenInfo, {Position = UDim2.new(.5, 0, .5, 0)})
             containerTween:Play()
             targetTween:Play()
@@ -46,10 +46,10 @@ function ArrowButton:_Initialize()
 
         elseif direction == "Right" then
             --Place target container to the right of button's container
-            target.Position = UDim2.new(target.Size.X.Scale * 2, 0, 0.5, 0)
+            target.Position = UDim2.new(2, 0, 0.5, 0)
             target.Visible = true
             --Tween container to the left, and target to the center
-            local containerTween = TweenService:Create(container, self._TweenInfo, {Position = UDim2.new(-1.5, 0, .5, 0)})
+            local containerTween = TweenService:Create(container, self._TweenInfo, {Position = UDim2.new(-2, 0, .5, 0)})
             local targetTween = TweenService:Create(target, self._TweenInfo, {Position = UDim2.new(.5, 0, .5, 0)})
             containerTween:Play()
             targetTween:Play()

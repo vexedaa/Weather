@@ -56,7 +56,6 @@ function ClearSkiesNight.new()
     self._ActivePresets = {};
 
     self._Connections = {};
-    print("Clear Skies", self)
     return self
 end
 

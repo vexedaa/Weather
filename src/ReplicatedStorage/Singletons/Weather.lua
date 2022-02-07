@@ -34,12 +34,15 @@ end
 
 function Weather:SetPreset(preset)
     local oldPreset = self._CurrentPreset
+    if oldPreset then
+        oldPreset:Clean()
+    end
     local getPreset = WeatherPresets:FindFirstChild(preset)
     if getPreset then
-        local activePreset = require(getPreset).new()
+        local activePreset = require(getPreset).new(self._TweenInfo)
         self._CurrentPreset = activePreset
         self._CurrentPresetName = preset
-        activePreset._Initialize()
+        activePreset:_Initialize()
         self:FadePresets(oldPreset or GenericWeatherPreset.new(), activePreset, 1)
         self._PresetChanged:Fire({preset})
     end
@@ -48,12 +51,13 @@ end
 function Weather:SetFadedPreset(presetFromName, presetToName, fadeAmount)
     self:SetPreset(presetFromName)
     local oldPreset = self._CurrentPreset
+    oldPreset:Clean()
     local getPreset = WeatherPresets:FindFirstChild(presetToName)
     if getPreset then
-        local activePreset = require(getPreset).new()
+        local activePreset = require(getPreset).new(self._TweenInfo)
         self._CurrentPreset = activePreset
         self._CurrentPresetName = presetToName
-        activePreset._Initialize()
+        activePreset:_Initialize()
         self:FadePresets(oldPreset, activePreset, fadeAmount or 0)
         local dominantPreset = presetToName
         if fadeAmount < 0.5 then
@@ -87,6 +91,18 @@ function Weather:EvaluateProperties(propertyFrom, propertyTo, fadeAmount)
 end
 
 function Weather:FadePresets(presetFrom, presetTo, fadeAmount)
+    local startingPreset = self._CurrentPreset
+    self:ApplyToServices(presetFrom, presetTo, fadeAmount or 0)
+    self:ApplyWeatherGlobals(presetFrom, presetTo, fadeAmount or 0)
+    task.spawn(function()
+        task.wait(self._TweenInfo.Time * .3)
+        if startingPreset == self._CurrentPreset then
+            self:ApplySounds(presetFrom, presetTo, fadeAmount or 0)
+        end
+    end)
+end
+
+function Weather:ApplyToServices(presetFrom, presetTo, fadeAmount)
     for service, propertySet in pairs(presetFrom._Services) do
         for propertyName, propertyFrom in pairs(propertySet) do
             local propertyTo = presetTo._Services[service][propertyName]
@@ -98,7 +114,11 @@ function Weather:FadePresets(presetFrom, presetTo, fadeAmount)
             end
         end
     end
-    for weatherGlobal, propertySet in pairs(presetFrom._WeatherGlobals) do
+end
+
+function Weather:ApplyWeatherGlobals(presetFrom, presetTo, fadeAmount)
+    local currentPreset = self._CurrentPreset
+    for weatherGlobal, propertySet in pairs(presetTo._WeatherGlobals) do
         local parent = propertySet.Parent
         local className = propertySet.ClassName
         local find = parent:FindFirstChildWhichIsA(className)
@@ -106,10 +126,26 @@ function Weather:FadePresets(presetFrom, presetTo, fadeAmount)
             find = Instance.new(className)
             find.Parent = parent
         end
-        for propertyName, propertyFrom in pairs(propertySet) do
+        for propertyName, propertyTo in pairs(propertySet) do
             if propertyName ~= "Parent" and propertyName ~= "ClassName" then
-                local propertyTo = presetTo._WeatherGlobals[weatherGlobal][propertyName]
+                local propertyFrom = nil
+                local getToWeatherGlobal = presetFrom._WeatherGlobals[weatherGlobal]
+                if getToWeatherGlobal then
+                    propertyFrom = presetFrom._WeatherGlobals[weatherGlobal][propertyName]
+                end
                 local result = self:EvaluateProperties(propertyFrom, propertyTo, fadeAmount)
+                if not result then
+                    local default = Instance.new(className)
+                    result = default[propertyName]
+                    print("Set", default.Name.."'s", propertyName, "setting to", result)
+                    default:Destroy()
+                    task.spawn(function()
+                        task.wait(self._TweenInfo.Time)
+                        if self._CurrentPreset == currentPreset then
+                            find:Destroy()
+                        end
+                    end)
+                end
                 if result then
                     self:TweenProperty(find, propertyName, result)
                 else
@@ -118,6 +154,9 @@ function Weather:FadePresets(presetFrom, presetTo, fadeAmount)
             end
         end
     end
+end
+
+function Weather:ApplySounds(presetFrom, presetTo, fadeAmount)
     local getWeatherSounds = SoundService:FindFirstChild("WeatherSounds")
     if not getWeatherSounds then
         getWeatherSounds = Instance.new("Folder")
@@ -195,7 +234,6 @@ function Weather:FadePresets(presetFrom, presetTo, fadeAmount)
             end
         end
     end
-
 end
 
 local Singleton = Weather.new()

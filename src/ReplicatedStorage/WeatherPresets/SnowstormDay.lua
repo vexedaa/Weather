@@ -1,13 +1,13 @@
 local presetsFolder = script.Parent
 local GenericWeatherPreset = require(presetsFolder:WaitForChild("GenericWeatherPreset"))
 
-local ClearSkiesDay = {}
-ClearSkiesDay.__index = ClearSkiesDay
-setmetatable(ClearSkiesDay, GenericWeatherPreset)
+local SnowstormDay = {}
+SnowstormDay.__index = SnowstormDay
+setmetatable(SnowstormDay, GenericWeatherPreset)
 
-function ClearSkiesDay.new()
+function SnowstormDay.new()
     local self = GenericWeatherPreset.new()
-    setmetatable(self, ClearSkiesDay)
+    setmetatable(self, SnowstormDay)
 
     self._Services = {
         [game:GetService("Lighting")] = {
@@ -18,7 +18,7 @@ function ClearSkiesDay.new()
             EnvironmentDiffuseScale = 1;
             EnvironmentSpecularScale = 1;
             OutdoorAmbient = Color3.fromRGB(70, 70, 70);
-            ShadowSoftness = 0.2;
+            ShadowSoftness = 1;
             ClockTime = 14.5;
             GeographicLatitude = 0;
             ExposureCompensation = 0;
@@ -29,21 +29,30 @@ function ClearSkiesDay.new()
         _Clouds = {
             Parent = workspace.Terrain;
             ClassName = "Clouds";
-            Cover = 0.5;
-            Density = 0.7;
-            Color = Color3.fromRGB(255, 255, 255)
+            Cover = 1;
+            Density = 0.369;
+            Color = Color3.fromRGB(221, 221, 221)
         };
 
         _Atmosphere = {
             Parent = game:GetService("Lighting");
             ClassName = "Atmosphere";
-            Density = 0.3;
-            Offset = 0.25;
-            Color = Color3.fromRGB(199, 199, 199);
-            Decay = Color3.fromRGB(106, 112, 125);
-            Glare = 0;
-            Haze = 0;
+            Density = 0.462;
+            Offset = 0;
+            Color = Color3.fromRGB(124, 127, 130);
+            Decay = Color3.fromRGB(207, 215, 220);
+            Glare = 0.31;
+            Haze = 10;
         };
+
+        _ColorCorrectionEffect = {
+            Parent = game:GetService("Lighting");
+            ClassName = "ColorCorrectionEffect";
+            Brightness = 0;
+            Contrast = 0.3;
+            Saturation = 0;
+            TintColor = Color3.fromRGB(195, 205, 218)
+        }
     };
 
     self._Sounds = {
@@ -59,4 +68,10 @@ function ClearSkiesDay.new()
     return self
 end
 
-return ClearSkiesDay
+function SnowstormDay:_Initialize()
+    GenericWeatherPreset._Initialize(self)
+    local grid = self.AtmosphericParticleGrid.new(9, 15, 1, 50, self.ParticleLayers.DefaultParticleLayers)
+    table.insert(self._ActiveParticleGrids, grid)
+end
+
+return SnowstormDay

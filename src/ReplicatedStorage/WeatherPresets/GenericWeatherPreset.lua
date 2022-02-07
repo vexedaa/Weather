@@ -1,9 +1,14 @@
 local GenericWeatherPreset = {}
 GenericWeatherPreset.__index = GenericWeatherPreset
 
-function GenericWeatherPreset.new()
-    local self = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Classes = ReplicatedStorage:WaitForChild("Classes")
+local m_AtmosphericParticleGrid = Classes:WaitForChild("AtmosphericParticleGrid")
+local AtmosphericParticleGrid = require(m_AtmosphericParticleGrid)
 
+function GenericWeatherPreset.new(fadeInfo)
+    local self = {}
+    self._FadeInfo = fadeInfo
     self._Services = {
         [game:GetService("Lighting")] = {
             Ambient = Color3.fromRGB(70, 70, 70);
@@ -52,6 +57,15 @@ function GenericWeatherPreset.new()
 
     self._Connections = {};
 
+    self._ActiveParticleGrids = {};
+
+    self.AtmosphericParticleGrid = AtmosphericParticleGrid
+
+    self.ParticleLayers = {}
+    for _, particleLayerModule in pairs(m_AtmosphericParticleGrid:GetChildren()) do
+        self.ParticleLayers[particleLayerModule.Name] = require(particleLayerModule)
+    end
+
     setmetatable(self, GenericWeatherPreset)
     self:_Initialize()
     return self
@@ -65,11 +79,15 @@ function GenericWeatherPreset:Clean()
     for _, dependency in pairs(self._PresetDependencies) do
         dependency:Clean()
     end
+    for i, grid in pairs(self._ActiveParticleGrids) do
+        grid:Stop()
+        grid:Decimate(self._FadeInfo)
+        self._ActiveParticleGrids[i] = nil
+    end
 end
 
 function GenericWeatherPreset:_Initialize()
     --Intentionally left blank for now
-    print(self)
     if self and self._PresetDependencies then
         for _, presetDependency in pairs(self._PresetDependencies) do
             local success, result = pcall(function()

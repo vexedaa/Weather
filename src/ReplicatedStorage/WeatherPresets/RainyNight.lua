@@ -31,7 +31,7 @@ function RainyNight.new()
             ClassName = "Clouds";
             Cover = 0.75;
             Density = 0.7;
-            Color = Color3.fromRGB(255, 255, 255)
+            Color = Color3.fromRGB(25, 25, 25)
         };
 
         _Atmosphere = {
