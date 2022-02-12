@@ -23,7 +23,7 @@
    There are a few presets included, but feel free to make your own!
 
    API:
-   Weather:GetCurrentPrepset()
+   Weather:GetCurrentPreset()
    Returns the current active weather preset
    
    Weather:GetCurrentPresetName()
